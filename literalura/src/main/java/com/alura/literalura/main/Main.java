@@ -1,14 +1,25 @@
 package com.alura.literalura.main;
 
+import com.alura.literalura.model.LibroDTO;
+import com.alura.literalura.repository.LibroRepository;
 import com.alura.literalura.service.ConsumoAPI;
+import com.alura.literalura.service.ConvierteDatos;
 
 import java.util.Scanner;
 
 public class Main {
+
     private final String URL = "https://gutendex.com/books?languages=es";
     private final String BUSCAR = "&search=";
     private ConsumoAPI consumoAPI = new ConsumoAPI();
     Scanner ingreso = new Scanner(System.in);
+    ConvierteDatos conversor = new ConvierteDatos();
+    private LibroRepository repository;
+
+
+    public Main(LibroRepository repository) {
+        this.repository = repository;
+    }
 
     public  void correrPrograma() {
         String presentacion = """
@@ -45,11 +56,15 @@ public class Main {
     }
 
 
+
     private void buscarLibrosPorTitulo() {
         System.out.println("Ingrese titulo");
         String titulo = ingreso.nextLine();
         String json = consumoAPI.pedirDatos(URL+BUSCAR+titulo.replace(" ", "+"));
-        System.out.println(json);
+
+        conversor.convertir(json, LibroDTO.class);
+
+
     }
 
 }
