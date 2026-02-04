@@ -1,11 +1,18 @@
 package com.alura.literalura.main;
 
-import com.alura.literalura.model.LibroDTO;
+import com.alura.literalura.model.DatosDTO;
+import com.alura.literalura.model.Libro;
+import com.alura.literalura.repository.AutorRepository;
 import com.alura.literalura.repository.LibroRepository;
 import com.alura.literalura.service.ConsumoAPI;
 import com.alura.literalura.service.ConvierteDatos;
+import com.alura.literalura.service.LibroService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 public class Main {
 
@@ -14,11 +21,11 @@ public class Main {
     private ConsumoAPI consumoAPI = new ConsumoAPI();
     Scanner ingreso = new Scanner(System.in);
     ConvierteDatos conversor = new ConvierteDatos();
-    private LibroRepository repository;
+    private LibroService service;
 
 
-    public Main(LibroRepository repository) {
-        this.repository = repository;
+    public Main(LibroService service) {
+        this.service = service;
     }
 
     public  void correrPrograma() {
@@ -55,16 +62,22 @@ public class Main {
         }
     }
 
-
+    private String request(String url){
+        return consumoAPI.pedirDatos(url);
+    }
 
     private void buscarLibrosPorTitulo() {
+
         System.out.println("Ingrese titulo");
         String titulo = ingreso.nextLine();
-        String json = consumoAPI.pedirDatos(URL+BUSCAR+titulo.replace(" ", "+"));
+        String json = request(URL+BUSCAR+titulo.replace(" ", "+"));
+        DatosDTO datos = conversor.convertir(json, DatosDTO.class);
 
-        conversor.convertir(json, LibroDTO.class);
-
-
+        if(datos.libros().isEmpty()){
+            System.out.println("Libro no encontrado");
+        }else {
+            service.guardarDatos(datos);
+        }
     }
 
 }

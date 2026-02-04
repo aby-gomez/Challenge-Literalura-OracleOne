@@ -22,15 +22,44 @@ public class Libro {
             inverseJoinColumns = @JoinColumn(name = "autor_id"))
     private List<Autor> autores;
 
-    private  String sinopsis;
+    @Column(columnDefinition = "TEXT")//ya que la sinopsis supera los 255 caracteres
+    private  List<String> sinopsis;
 
     public Libro(LibroDTO libro) {
         this.sinopsis = libro.sinopsis();
         this.titulo = libro.titulo();
-        this.autores = libro.autores().stream()
-                .map(a -> new Autor(a.nombre(),a.añoFallecimiento(),a.añoNacimiento()))
-                .collect(Collectors.toList());
+
     }
 
+    public Long getId() {
+        return id;
+    }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getTitulo() {
+        return titulo;
+    }
+
+    public void setTitulo(String titulo) {
+        this.titulo = titulo;
+    }
+
+    public List<Autor> getAutores() {
+        return autores;
+    }
+
+    public void setAutores(List<Autor> autores) {
+        this.autores = autores;
+    }
+
+    public List<String> getSinopsis() {
+        return sinopsis;
+    }
+
+    public void setSinopsis(List<String> sinopsis) {
+        this.sinopsis = sinopsis;
+    }
 }

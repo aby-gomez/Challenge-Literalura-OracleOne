@@ -22,6 +22,7 @@ public class ConsumoAPI {
             HttpResponse<String> respuesta = cliente.send(request, HttpResponse.BodyHandlers.ofString());
             System.out.println(respuesta);
             json = respuesta.body();
+            System.out.println(json);
 
         }catch (IOException  | InterruptedException e){
             System.out.println("Error"+ e.getMessage());
