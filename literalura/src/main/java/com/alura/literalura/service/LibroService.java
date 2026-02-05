@@ -55,15 +55,19 @@ public class LibroService {
 
     public void guardarDatos(DatosDTO datos) {
         List<Libro> libros = convertirAListaDeLibros(datos);
-
-        for(Libro libro : libros){
-            String titulo = libro.getTitulo();
+        Libro libro;
+        for(Libro l : libros){
+            String titulo = l.getTitulo();
             Optional<Libro> libroBd = libroRepository.findByTitulo(titulo);
             if(libroBd.isEmpty()){
+                libro = new Libro();
                 libroRepository.save(libro);
+                System.out.println("Libros guardados en la base de datos.");
+            }else{
+                System.out.println("No se puede guardar 2 veces el libro en la base de datos");
             }
         }
-        System.out.println("Libros guardados en la base de datos.");
+
     }
 
 

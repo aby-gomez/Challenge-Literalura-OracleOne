@@ -29,6 +29,7 @@ public class Main {
         this.service = service;
     }
 
+
     public  void correrPrograma() {
         String presentacion = """
      
@@ -105,7 +106,7 @@ public class Main {
     private void mostrarLibrosRegistrados() {
         service.mostrarLibrosRegistrados().stream()
                 .map(l -> "Titulo : "+"'"+l.titulo() +"'"+ " | Autores : "+"'"+l.autores().stream()
-                        .map(a -> a.nombre()).collect(Collectors.joining(", "))+"'" +" | Lenguaje :"+l.lenguaje()+" | Total de descargas :"+l.descargas())
+                        .map(a -> a.nombre()).collect(Collectors.joining(", "))+"'" +" | Idioma :"+l.lenguaje()+" | Total de descargas :"+l.descargas())
                 .forEach(System.out::println);
 
     }
@@ -156,7 +157,7 @@ public class Main {
             } else {
                 libros.stream()
                         .map(l -> "Titulo : " + "'" + l.titulo() + "'" + " | Autores : " + "'" + l.autores().stream()
-                                .map(a -> a.nombre()).collect(Collectors.joining(", ")) + "'" + " | Lenguaje :" + l.lenguaje() + " | Total de descargas :" + l.descargas())
+                                .map(a -> a.nombre()).collect(Collectors.joining(", ")) + "'" + " | Idioma :" + l.lenguaje() + " | Total de descargas :" + l.descargas())
                         .forEach(System.out::println);
 
                 IntSummaryStatistics est = libros.stream()

@@ -20,9 +20,9 @@ public class ConsumoAPI {
                     .build();
             //htt response el el contenedor, trae los headers, body y codigos(200,400)
             HttpResponse<String> respuesta = cliente.send(request, HttpResponse.BodyHandlers.ofString());
-            System.out.println(respuesta);
+
             json = respuesta.body();
-            System.out.println(json);
+
 
 
         }catch (IOException  | InterruptedException e){
