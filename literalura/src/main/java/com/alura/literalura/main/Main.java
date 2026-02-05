@@ -1,5 +1,6 @@
 package com.alura.literalura.main;
 
+import com.alura.literalura.model.AutorDTO;
 import com.alura.literalura.model.DatosDTO;
 import com.alura.literalura.model.Libro;
 import com.alura.literalura.model.LibroDTO;
@@ -52,7 +53,7 @@ public class Main {
             try {
                 opcion = ingreso.nextInt();
             }catch (InputMismatchException e){
-                System.out.println("Solo puede ingresar numeros"+e.getMessage());
+                System.out.println("Solo puede ingresar numeros");
             }finally {
                 ingreso.nextLine();
 
@@ -63,6 +64,12 @@ public class Main {
                     case 2:
                         mostrarLibrosRegistrados();
                         break;
+                    case 3:
+                        mostrarAutoresRegistrados();
+                        break;
+                    case 4:
+                        mostrarAutoresVivosPorAño();
+                        break;
                     case 0:
                         System.out.println("Cerrando aplicación");
                         break;
@@ -72,6 +79,8 @@ public class Main {
             }
         }
     }
+
+
 
 
     private String request(String url){
@@ -100,5 +109,26 @@ public class Main {
 
     }
 
+    private void mostrarAutoresRegistrados() {
+        service.mostrarAutoresRegistrados().stream()
+                .map(a -> "Nombre : '"+a.nombre()+"' | Año de nacimiento : "+a.añoNacimiento()+" | Año de fallecimiento : "+a.añoFallecimiento())
+                .forEach(System.out::println);
+    }
+
+    private void mostrarAutoresVivosPorAño() {
+        System.out.println("Ingrese año");
+        Integer año = ingreso.nextInt();
+        ingreso.nextLine();
+
+        List<AutorDTO> autores = service.mostrarAutoresVivosPorAño(año);
+        if(autores.isEmpty()){
+            System.out.println("En ese periodo no hay autores vivos registrados");
+
+        }else{
+            autores.stream()
+                    .map(a -> "Nombre : '"+a.nombre()+"' | Año de nacimiento : "+a.añoNacimiento()+" | Año de fallecimiento : "+a.añoFallecimiento())
+                    .forEach(System.out::println);
+        }
+    }
 
 }

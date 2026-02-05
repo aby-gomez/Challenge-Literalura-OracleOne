@@ -24,9 +24,7 @@ public class LibroService {
         return libros.stream()
                 .map(l -> {
                     //transformo autor en autor dto
-                    List<AutorDTO> autores = l.getAutores().stream()
-                            .map(a -> new AutorDTO(a.getNombre(), a.getAñoNacimiento(), a.getAñoFallecimiento()))
-                            .collect(Collectors.toList());
+                    List<AutorDTO> autores = convertirAutorDTO( l.getAutores());
                     //transformo en string ded sinopsis en una lista
                     List<String> lenguaje = new ArrayList<>();
                     lenguaje.add(l.getLenguaje());
@@ -36,6 +34,14 @@ public class LibroService {
                 .collect(Collectors.toList());
 
     }
+
+    public List<AutorDTO> convertirAutorDTO(List<Autor> autores){
+        return autores.stream()
+                .map(a -> new AutorDTO(a.getNombre(), a.getAñoNacimiento(), a.getAñoFallecimiento()))
+                .collect(Collectors.toList());
+
+    }
+
     public List<Libro> convertirAListaDeLibros(DatosDTO datos){
         return datos.libros().stream()
                 .map(l -> {
@@ -83,5 +89,17 @@ public class LibroService {
         List<Libro> libros = libroRepository.findAll();
 
         return convertirALibroDTO(libros);
+    }
+
+    public List<AutorDTO> mostrarAutoresRegistrados(){
+        List<Autor> autores = autorRepository.findAll();
+        return convertirAutorDTO(autores);
+    }
+
+    public List<AutorDTO>  mostrarAutoresVivosPorAño(Integer año) {
+            List<Autor> autoresBd = autorRepository.mostrarAutoresVivosPorAño(año);
+
+            return convertirAutorDTO(autoresBd);
+
     }
 }
