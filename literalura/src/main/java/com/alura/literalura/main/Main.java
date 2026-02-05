@@ -1,9 +1,6 @@
 package com.alura.literalura.main;
 
-import com.alura.literalura.model.AutorDTO;
-import com.alura.literalura.model.DatosDTO;
-import com.alura.literalura.model.Libro;
-import com.alura.literalura.model.LibroDTO;
+import com.alura.literalura.model.*;
 import com.alura.literalura.repository.AutorRepository;
 import com.alura.literalura.repository.LibroRepository;
 import com.alura.literalura.service.ConsumoAPI;
@@ -13,6 +10,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.InputMismatchException;
+import java.util.IntSummaryStatistics;
 import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Collectors;
@@ -133,18 +131,40 @@ public class Main {
                     .forEach(System.out::println);
         }
     }
+
     private void buscarLibrosPorIdioma() {
         System.out.println("Ingrese idioma");
-        String idioma = ingreso.nextLine();
+        String entrada = "";
 
-        List<LibroDTO> libros = service.buscarLibrosPorIdioma(idioma);
-        if(libros.isEmpty()){
-            System.out.println("No se encuentran  libros en ese idioma registrados");
-        }else{
-            libros.stream()
-                    .map(l -> "Titulo : "+"'"+l.titulo() +"'"+ " | Autores : "+"'"+l.autores().stream()
-                            .map(a -> a.nombre()).collect(Collectors.joining(", "))+"'" +" | Lenguaje :"+l.lenguaje()+" | Total de descargas :"+l.descargas())
-                    .forEach(System.out::println);
+        String idiomaEnum = null;
+
+        while (idiomaEnum == null) {
+             entrada = ingreso.nextLine();
+            try {
+                idiomaEnum = Idioma.fromString(entrada).name();
+            } catch (IllegalArgumentException e) {
+                System.out.println("Error: " + e.getMessage());
+                System.out.println("Por favor, intente nuevamente ");
+            }
+        }
+
+
+            List<LibroDTO> libros = service.buscarLibrosPorIdioma(idiomaEnum.toLowerCase());
+
+            if (libros.isEmpty()) {
+                System.out.println("No se encuentran  libros en ese idioma registrados");
+            } else {
+                libros.stream()
+                        .map(l -> "Titulo : " + "'" + l.titulo() + "'" + " | Autores : " + "'" + l.autores().stream()
+                                .map(a -> a.nombre()).collect(Collectors.joining(", ")) + "'" + " | Lenguaje :" + l.lenguaje() + " | Total de descargas :" + l.descargas())
+                        .forEach(System.out::println);
+
+                IntSummaryStatistics est = libros.stream()
+                        .filter(l -> l.descargas() > 0)
+                        .collect(Collectors.summarizingInt(LibroDTO::descargas));
+                System.out.println();
+                System.out.println("Cantidad de libros en " + entrada + " : " + est.getCount());
+
         }
     }
 
