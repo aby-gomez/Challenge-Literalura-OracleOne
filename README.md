@@ -1,4 +1,5 @@
-# Literalura - Catálogo de Libros
+## <img src="https://github.com/user-attachments/assets/0c621109-5757-4843-84b2-fa82885a452b" width="50" height="50" align="center" /> Literalura - Catálogo de Libros
+
 
 <p align="center">
   <img src="https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white" alt="Java">
