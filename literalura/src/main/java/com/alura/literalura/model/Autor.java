@@ -18,6 +18,7 @@ public class Autor {
     @ManyToMany(mappedBy = "autores") //la lista de autores en libro
     private List<Libro> libros;
 
+    public Autor(){};
 
     public Autor(AutorDTO autorDTO) {
         this.nombre = autorDTO.nombre();

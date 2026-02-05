@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
 @Entity
 @Table(name = "libros")
 public class Libro {
@@ -15,7 +16,7 @@ public class Libro {
     @Column(unique = true)
     private String titulo;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "libros_y_autores",
             joinColumns = @JoinColumn(name = "libro_id"),//conecta al lado del dueño de la relacion, en many to many no hay dueño hay que definirlo igual para que jpa no cree 2 tablas intermedias
@@ -23,11 +24,18 @@ public class Libro {
     private List<Autor> autores;
 
     @Column(columnDefinition = "TEXT")//ya que la sinopsis supera los 255 caracteres
-    private  List<String> sinopsis;
+    private  String lenguaje;
+
+    private Integer descargas;
+
+    public Libro(){};
 
     public Libro(LibroDTO libro) {
-        this.sinopsis = libro.sinopsis();
+        this.lenguaje =(libro.lenguaje() != null && !libro.lenguaje().isEmpty())
+                ? libro.lenguaje().get(0)
+                : "Desconocido";
         this.titulo = libro.titulo();
+        this.descargas = libro.descargas();
 
     }
 
@@ -55,11 +63,19 @@ public class Libro {
         this.autores = autores;
     }
 
-    public List<String> getSinopsis() {
-        return sinopsis;
+    public String getLenguaje() {
+        return lenguaje;
     }
 
-    public void setSinopsis(List<String> sinopsis) {
-        this.sinopsis = sinopsis;
+    public void setLenguaje(String lenguaje) {
+        this.lenguaje = lenguaje;
+    }
+
+    public Integer getDescargas() {
+        return descargas;
+    }
+
+    public void setDescargas(Integer descargas) {
+        this.descargas = descargas;
     }
 }

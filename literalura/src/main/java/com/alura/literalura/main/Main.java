@@ -2,6 +2,7 @@ package com.alura.literalura.main;
 
 import com.alura.literalura.model.DatosDTO;
 import com.alura.literalura.model.Libro;
+import com.alura.literalura.model.LibroDTO;
 import com.alura.literalura.repository.AutorRepository;
 import com.alura.literalura.repository.LibroRepository;
 import com.alura.literalura.service.ConsumoAPI;
@@ -10,14 +11,15 @@ import com.alura.literalura.service.LibroService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
 public class Main {
 
-    private final String URL = "https://gutendex.com/books?languages=es";
-    private final String BUSCAR = "&search=";
+    private final String URL = "https://gutendex.com/books?";
+    private final String BUSCAR = "search=";
     private ConsumoAPI consumoAPI = new ConsumoAPI();
     Scanner ingreso = new Scanner(System.in);
     ConvierteDatos conversor = new ConvierteDatos();
@@ -47,20 +49,30 @@ public class Main {
 
         while(opcion != 0){
             System.out.println(presentacion);
-            opcion = ingreso.nextInt();
-            ingreso.nextLine();
+            try {
+                opcion = ingreso.nextInt();
+            }catch (InputMismatchException e){
+                System.out.println("Solo puede ingresar numeros"+e.getMessage());
+            }finally {
+                ingreso.nextLine();
 
-            switch(opcion){
-                case 1 : buscarLibrosPorTitulo();
-                break;
-                case 0 :
-                    System.out.println("Cerrando aplicación");
-                    break;
-                default:
-                    System.out.println("Opción inválida");
+                switch (opcion) {
+                    case 1:
+                        buscarLibrosPorTitulo();
+                        break;
+                    case 2:
+                        mostrarLibrosRegistrados();
+                        break;
+                    case 0:
+                        System.out.println("Cerrando aplicación");
+                        break;
+                    default:
+                        System.out.println("Opción inválida");
+                }
             }
         }
     }
+
 
     private String request(String url){
         return consumoAPI.pedirDatos(url);
@@ -79,5 +91,14 @@ public class Main {
             service.guardarDatos(datos);
         }
     }
+
+    private void mostrarLibrosRegistrados() {
+        service.mostrarLibrosRegistrados().stream()
+                .map(l -> "Titulo : "+"'"+l.titulo() +"'"+ " | Autores : "+"'"+l.autores().stream()
+                        .map(a -> a.nombre()).collect(Collectors.joining(", "))+"'" +" | Lenguaje :"+l.lenguaje()+" | Total de descargas :"+l.descargas())
+                .forEach(System.out::println);
+
+    }
+
 
 }

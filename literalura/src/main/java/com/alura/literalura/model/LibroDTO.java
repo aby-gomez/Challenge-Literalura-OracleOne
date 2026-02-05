@@ -8,6 +8,7 @@ import java.util.List;
 public record LibroDTO(
         @JsonAlias("title") String titulo,
         @JsonAlias("authors") List<AutorDTO> autores,
-        @JsonAlias("summaries") List<String> sinopsis
+        @JsonAlias("languages") List<String> lenguaje,
+        @JsonAlias("download_count") Integer descargas
 ) {
 }
