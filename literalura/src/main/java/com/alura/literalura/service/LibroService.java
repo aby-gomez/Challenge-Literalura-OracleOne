@@ -102,4 +102,9 @@ public class LibroService {
             return convertirAutorDTO(autoresBd);
 
     }
+
+    public List<LibroDTO> buscarLibrosPorIdioma(String idioma) {
+        List<Libro> librosBd = libroRepository.findByLenguaje(idioma);
+        return convertirALibroDTO(librosBd);
+    }
 }

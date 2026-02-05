@@ -70,6 +70,9 @@ public class Main {
                     case 4:
                         mostrarAutoresVivosPorAño();
                         break;
+                    case 5:
+                        buscarLibrosPorIdioma();
+                        break;
                     case 0:
                         System.out.println("Cerrando aplicación");
                         break;
@@ -127,6 +130,20 @@ public class Main {
         }else{
             autores.stream()
                     .map(a -> "Nombre : '"+a.nombre()+"' | Año de nacimiento : "+a.añoNacimiento()+" | Año de fallecimiento : "+a.añoFallecimiento())
+                    .forEach(System.out::println);
+        }
+    }
+    private void buscarLibrosPorIdioma() {
+        System.out.println("Ingrese idioma");
+        String idioma = ingreso.nextLine();
+
+        List<LibroDTO> libros = service.buscarLibrosPorIdioma(idioma);
+        if(libros.isEmpty()){
+            System.out.println("No se encuentran  libros en ese idioma registrados");
+        }else{
+            libros.stream()
+                    .map(l -> "Titulo : "+"'"+l.titulo() +"'"+ " | Autores : "+"'"+l.autores().stream()
+                            .map(a -> a.nombre()).collect(Collectors.joining(", "))+"'" +" | Lenguaje :"+l.lenguaje()+" | Total de descargas :"+l.descargas())
                     .forEach(System.out::println);
         }
     }
